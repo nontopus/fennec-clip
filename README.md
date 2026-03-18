@@ -39,7 +39,7 @@ pip install flask flask-cors pandas werkzeug pymavlink requests openpyxl xlsxwri
 1. Clone the repository from GitHub:
 
 ```sh
-git clone https://github.com/jaedync/fennec-clip.git
+git clone https://github.com/nontopus/fennec-clip.git
 ```
 
 2. Navigate to the cloned directory:
