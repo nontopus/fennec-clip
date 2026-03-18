@@ -162,7 +162,7 @@ def haversine_distance(lat1, lon1, lat2, lon2, axis):
 
 # Modified fetch_weather_data function
 def fetch_weather_data(start_timestamp, end_timestamp):
-    url = f"http://weather.jaedynchilton.com/historic?start-timestamp={int(start_timestamp)}&end-timestamp={int(end_timestamp)}"
+    url = f"https://weather.itsnull.net//historic?start-timestamp={int(start_timestamp)}&end-timestamp={int(end_timestamp)}"
     response = requests.get(url)
     if response.status_code == 200:
         return response.json()["data"], True
@@ -825,9 +825,21 @@ def convert_bin_to_export(
     #         )
 
     # Fetch Weather Data
+    # gps_df = data_frames.get("GPS", pd.DataFrame())
+    # min_time = gps_df["Unix_Epoch_Time"].min() - 900 if not gps_df.empty else None
+    # max_time = gps_df["Unix_Epoch_Time"].max() + 900 if not gps_df.empty else None
+    #
+
+    # MICAH INSERT
     gps_df = data_frames.get("GPS", pd.DataFrame())
-    min_time = gps_df["Unix_Epoch_Time"].min() - 900 if not gps_df.empty else None
-    max_time = gps_df["Unix_Epoch_Time"].max() + 900 if not gps_df.empty else None
+
+    # --- Safely handle missing time columns ---
+    if not gps_df.empty and "Unix_Epoch_Time" in gps_df.columns:
+        min_time = gps_df["Unix_Epoch_Time"].min() - 900
+        max_time = gps_df["Unix_Epoch_Time"].max() + 900
+    else:
+        print("⚠️ GPS data missing 'Unix_Epoch_Time' — skipping weather fetch.")
+        min_time, max_time = None, None
     # weather_data, _ = fetch_weather_data(min_time, max_time) if min_time and max_time else ([], False)
 
     # Debugging: Print each DataFrame, its columns, and row count
